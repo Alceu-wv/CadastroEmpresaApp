@@ -17,35 +17,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/checkBoxIsApproved" />
 
-    <EditText
-        android:id="@+id/txtAdress"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="textPersonName"
-        android:minHeight="48dp"
-        android:textSize="24sp"
-        app:layout_constraintBottom_toTopOf="@+id/txtComments"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txtName" />
-
-    <EditText
-        android:id="@+id/txtComments"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="4dp"
-        android:ems="10"
-        android:inputType="textPersonName"
-        android:minHeight="48dp"
-        android:textSize="24sp"
-        app:layout_constraintBottom_toTopOf="@+id/checkBoxIsApproved"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txtAdress" />
-
     <CheckBox
         android:id="@+id/checkBoxIsApproved"
         android:layout_width="280dp"
@@ -68,6 +39,19 @@
         app:layout_constraintBottom_toTopOf="@+id/txtAdress"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toEndOf="@+id/lblNome"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/lblNome"
+        android:layout_width="105dp"
+        android:layout_height="54dp"
+        android:text="Nome"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toTopOf="@+id/lblAdress"
+        app:layout_constraintEnd_toStartOf="@+id/txtName"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -82,43 +66,59 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btnSalvar" />
 
-    <EditText
-        android:id="@+id/lblName"
-        android:layout_width="113dp"
-        android:layout_height="46dp"
-        android:layout_marginTop="44dp"
-        android:ems="10"
-        android:inputType="textPersonName"
-        android:text="Nome"
-        app:layout_constraintEnd_toStartOf="@+id/txtName"
-        app:layout_constraintHorizontal_bias="0.8"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <EditText
+    <TextView
         android:id="@+id/lblAdress"
-        android:layout_width="113dp"
-        android:layout_height="46dp"
-        android:layout_marginTop="48dp"
-        android:ems="10"
-        android:inputType="textPersonName"
+        android:layout_width="105dp"
+        android:layout_height="54dp"
         android:text="Endereço"
-        app:layout_constraintEnd_toStartOf="@+id/txtName"
-        app:layout_constraintHorizontal_bias="0.8"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toTopOf="@+id/lblComments"
+        app:layout_constraintEnd_toStartOf="@+id/txtAdress"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/lblName" />
+        app:layout_constraintTop_toBottomOf="@+id/lblNome" />
 
     <EditText
-        android:id="@+id/lblComments"
-        android:layout_width="113dp"
-        android:layout_height="46dp"
-        android:layout_marginTop="44dp"
+        android:id="@+id/txtAdress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:ems="10"
         android:inputType="textPersonName"
+        android:minHeight="48dp"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toTopOf="@+id/txtComments"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toEndOf="@+id/lblAdress"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txtName" />
+
+    <TextView
+        android:id="@+id/lblComments"
+        android:layout_width="105dp"
+        android:layout_height="54dp"
         android:text="Comentários"
-        app:layout_constraintEnd_toStartOf="@+id/txtName"
-        app:layout_constraintHorizontal_bias="0.8"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toTopOf="@+id/checkBoxIsApproved"
+        app:layout_constraintEnd_toStartOf="@+id/txtComments"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/lblAdress" />
+
+    <EditText
+        android:id="@+id/txtComments"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="4dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:minHeight="48dp"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toTopOf="@+id/checkBoxIsApproved"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toEndOf="@+id/lblComments"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txtAdress" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
