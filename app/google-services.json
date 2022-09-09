@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "593328559242",
+    "project_id": "testeinfnet-36b99",
+    "storage_bucket": "testeinfnet-36b99.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:593328559242:android:8d97c1402384f4b41b4973",
+        "android_client_info": {
+          "package_name": "br.edu.infnet.firebasetest"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "593328559242-c4mooi14v297fjvhavhili0lod369kio.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBxl8D1C1z9fiAfT5hLgJbmh8vn9EY2Jys"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "593328559242-c4mooi14v297fjvhavhili0lod369kio.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
