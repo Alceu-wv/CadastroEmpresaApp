@@ -15,24 +15,24 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/checkBox" />
+        app:layout_constraintTop_toBottomOf="@+id/checkBoxIsApproved" />
 
     <EditText
-        android:id="@+id/txtInsert"
+        android:id="@+id/txtAdress"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ems="10"
         android:inputType="textPersonName"
         android:minHeight="48dp"
         android:textSize="24sp"
-        app:layout_constraintBottom_toTopOf="@+id/txtInsert2"
+        app:layout_constraintBottom_toTopOf="@+id/txtComments"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txtInsert3" />
+        app:layout_constraintTop_toBottomOf="@+id/txtName" />
 
     <EditText
-        android:id="@+id/txtInsert2"
+        android:id="@+id/txtComments"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="4dp"
@@ -40,32 +40,32 @@
         android:inputType="textPersonName"
         android:minHeight="48dp"
         android:textSize="24sp"
-        app:layout_constraintBottom_toTopOf="@+id/checkBox"
+        app:layout_constraintBottom_toTopOf="@+id/checkBoxIsApproved"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txtInsert" />
+        app:layout_constraintTop_toBottomOf="@+id/txtAdress" />
 
     <CheckBox
-        android:id="@+id/checkBox"
+        android:id="@+id/checkBoxIsApproved"
         android:layout_width="280dp"
         android:layout_height="48dp"
-        android:text="CheckBox"
+        android:text="Aprovada"
         app:layout_constraintBottom_toTopOf="@+id/btnSalvar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txtInsert2" />
+        app:layout_constraintTop_toBottomOf="@+id/txtComments" />
 
     <EditText
-        android:id="@+id/txtInsert3"
+        android:id="@+id/txtName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ems="10"
         android:inputType="textPersonName"
         android:minHeight="48dp"
         android:textSize="24sp"
-        app:layout_constraintBottom_toTopOf="@+id/txtInsert"
+        app:layout_constraintBottom_toTopOf="@+id/txtAdress"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
@@ -83,42 +83,42 @@
         app:layout_constraintTop_toBottomOf="@+id/btnSalvar" />
 
     <EditText
-        android:id="@+id/editTextTextPersonName"
+        android:id="@+id/lblName"
         android:layout_width="113dp"
         android:layout_height="46dp"
         android:layout_marginTop="44dp"
         android:ems="10"
         android:inputType="textPersonName"
-        android:text="Name"
-        app:layout_constraintEnd_toStartOf="@+id/txtInsert3"
+        android:text="Nome"
+        app:layout_constraintEnd_toStartOf="@+id/txtName"
         app:layout_constraintHorizontal_bias="0.8"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
-        android:id="@+id/editTextTextPersonName2"
+        android:id="@+id/lblAdress"
         android:layout_width="113dp"
         android:layout_height="46dp"
         android:layout_marginTop="48dp"
         android:ems="10"
         android:inputType="textPersonName"
-        android:text="Name"
-        app:layout_constraintEnd_toStartOf="@+id/txtInsert3"
+        android:text="Endereço"
+        app:layout_constraintEnd_toStartOf="@+id/txtName"
         app:layout_constraintHorizontal_bias="0.8"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextTextPersonName" />
+        app:layout_constraintTop_toBottomOf="@+id/lblName" />
 
     <EditText
-        android:id="@+id/editTextTextPersonName3"
+        android:id="@+id/lblComments"
         android:layout_width="113dp"
         android:layout_height="46dp"
         android:layout_marginTop="44dp"
         android:ems="10"
         android:inputType="textPersonName"
-        android:text="Name"
-        app:layout_constraintEnd_toStartOf="@+id/txtInsert3"
+        android:text="Comentários"
+        app:layout_constraintEnd_toStartOf="@+id/txtName"
         app:layout_constraintHorizontal_bias="0.8"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextTextPersonName2" />
+        app:layout_constraintTop_toBottomOf="@+id/lblAdress" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
