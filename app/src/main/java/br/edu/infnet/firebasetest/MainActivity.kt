@@ -26,9 +26,9 @@ class MainActivity : AppCompatActivity() {
 
             override fun onDataChange(snapshot: DataSnapshot) {
 
-                val mensagem = snapshot.getValue(Mensagem::class.java)
-                if (mensagem?.data != null && mensagem?.texto != null) {
-                    lblTexto.append("${mensagem!!.data} - ${mensagem!!.texto}\n")
+                val empresa = snapshot.getValue(Empresa::class.java)
+                if (empresa?.name != null && empresa?.comments != null) {
+                    lblTexto.append("${empresa!!.name} - ${empresa!!.comments}\n")
                 }
             }
 
@@ -38,12 +38,12 @@ class MainActivity : AppCompatActivity() {
             }
         })
         btnSalvar.setOnClickListener {
-            val mensagem = Mensagem()
-            mensagem.data = Date().toString()
-            mensagem.texto = txtTexto.text.toString()
+            val empresa = Empresa()
+            empresa.name = Date().toString()
+            empresa.comments = txtTexto.text.toString()
             val database = FirebaseDatabase.getInstance()
             val myref = database.getReference("mensagens")
-            myref.setValue(mensagem)
+            myref.setValue(empresa)
             txtTexto.setText(null)
         }
     }
