@@ -1,8 +1,10 @@
 package br.edu.infnet.firebasetest
 
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.*
+import androidx.annotation.RequiresApi
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
@@ -10,6 +12,10 @@ import com.google.firebase.database.ValueEventListener
 import java.util.*
 
 class MainActivity : AppCompatActivity() {
+
+    val criptografador = Criptografador()
+
+    @RequiresApi(Build.VERSION_CODES.M)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -27,8 +33,12 @@ class MainActivity : AppCompatActivity() {
             override fun onDataChange(snapshot: DataSnapshot) {
 
                 val empresa = snapshot.getValue(Empresa::class.java)
-                if (empresa?.name != null && empresa?.comments != null) {
-                    lblTexto.append("${empresa!!.name} - ${empresa!!.comments} - ${empresa!!.adress} - ${empresa!!.is_approved}\n")
+
+                // Essa verificação não está funcionando pois parametro vazios vem como string vazia.
+                // TODO: Passar essa verificação para o momento do salvamento
+                if (empresa?.name != null && empresa?.comments != null && empresa.adress != "") {
+                    val empresaAdress = criptografador.descriptografar(empresa!!.adress!!)
+                    lblTexto.append("${empresa!!.name} - ${empresa!!.comments} - ${empresaAdress} - ${empresa!!.is_approved}\n")
                 }
             }
 
@@ -39,9 +49,10 @@ class MainActivity : AppCompatActivity() {
         })
         btnSalvar.setOnClickListener {
             val empresa = Empresa()
+
             empresa.name = txtName.text.toString()
             empresa.comments = txtComments.text.toString()
-            empresa.adress = txtAdress.text.toString()
+            empresa.adress = criptografador.criptografar(txtAdress.text.toString())
             empresa.is_approved = checkBoxIsApproved.isChecked
 
             val database = FirebaseDatabase.getInstance()
