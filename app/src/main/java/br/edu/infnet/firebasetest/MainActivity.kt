@@ -1,10 +1,12 @@
 package br.edu.infnet.firebasetest
 
+import android.content.Intent.getIntent
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.*
 import androidx.annotation.RequiresApi
+import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
@@ -14,6 +16,8 @@ import java.util.*
 class MainActivity : AppCompatActivity() {
 
     val criptografador = Criptografador()
+    private lateinit var mUser: FirebaseUser
+
 
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -37,7 +41,10 @@ class MainActivity : AppCompatActivity() {
                 // Essa verificação não está funcionando pois parametro vazios vem como string vazia.
                 // TODO: Passar essa verificação para o momento do salvamento
                 if (empresa?.name != null && empresa?.comments != null && empresa.adress != "") {
-                    val empresaAdress = criptografador.descriptografar(empresa!!.adress!!)
+
+                    // FIXME: O descritografador não está funcionando
+//                    val empresaAdress = criptografador.descriptografar(empresa!!.adress!!)
+                    val empresaAdress = empresa!!.adress!!
                     lblTexto.append("${empresa!!.name} - ${empresa!!.comments} - ${empresaAdress} - ${empresa!!.is_approved}\n")
                 }
             }
