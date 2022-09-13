@@ -1,9 +1,9 @@
 package br.edu.infnet.firebasetest
 
-import android.content.Intent.getIntent
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import android.widget.*
 import androidx.annotation.RequiresApi
 import com.google.firebase.auth.FirebaseUser
@@ -11,9 +11,8 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
-import java.util.*
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), RecyclerViewItemListener {
 
     val criptografador = Criptografador()
     private lateinit var mUser: FirebaseUser
@@ -28,7 +27,7 @@ class MainActivity : AppCompatActivity() {
         val txtAdress = this.findViewById<EditText>(R.id.txtAdress)
         val txtComments = this.findViewById<EditText>(R.id.txtComments)
         val checkBoxIsApproved = this.findViewById<CheckBox>(R.id.checkBoxIsApproved)
-        val lblTexto = this.findViewById<TextView>(R.id.textView)
+        val lblTexto = this.findViewById<TextView>(R.id.txtNameRow)
         val btnSalvar = this.findViewById<Button>(R.id.btnSalvar)
         val database = FirebaseDatabase.getInstance()
         val myref = database.getReference("mensagens")
@@ -70,5 +69,9 @@ class MainActivity : AppCompatActivity() {
             txtComments.setText(null)
             txtName.setText(null)
         }
+    }
+
+    override fun recicleViewItemClicked(view: View, id: String) {
+
     }
 }
