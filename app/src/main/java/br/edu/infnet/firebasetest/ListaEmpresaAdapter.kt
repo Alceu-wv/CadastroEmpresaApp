@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
-class ListaEmpresaAdapter : RecyclerView.Adapter<ListaEmpresaAdapter.ViewHolder> {
+class ListaEmpresaAdapter : RecyclerView.Adapter<ListaEmpresaAdapter.ViewHolder>() {
 
     var listaEmpresa = ArrayList<Empresa>()
     set(value) {

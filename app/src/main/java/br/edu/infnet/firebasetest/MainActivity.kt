@@ -3,6 +3,7 @@ package br.edu.infnet.firebasetest
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.*
 import androidx.annotation.RequiresApi
@@ -29,6 +30,7 @@ class MainActivity : AppCompatActivity(), RecyclerViewItemListener {
         val checkBoxIsApproved = this.findViewById<CheckBox>(R.id.checkBoxIsApproved)
         val lblTexto = this.findViewById<TextView>(R.id.txtNameRow)
         val btnSalvar = this.findViewById<Button>(R.id.btnSalvar)
+
         val database = FirebaseDatabase.getInstance()
         val myref = database.getReference("mensagens")
         myref.addValueEventListener(object: ValueEventListener {
@@ -37,15 +39,9 @@ class MainActivity : AppCompatActivity(), RecyclerViewItemListener {
 
                 val empresa = snapshot.getValue(Empresa::class.java)
 
-                // Essa verificação não está funcionando pois parametro vazios vem como string vazia.
-                // TODO: Passar essa verificação para o momento do salvamento
-                if (empresa?.name != null && empresa?.comments != null && empresa.adress != "") {
-
-                    // FIXME: O descritografador não está funcionando
-//                    val empresaAdress = criptografador.descriptografar(empresa!!.adress!!)
-                    val empresaAdress = empresa!!.adress!!
-                    lblTexto.append("${empresa!!.name} - ${empresa!!.comments} - ${empresaAdress} - ${empresa!!.is_approved}\n")
-                }
+//              FIXME: val empresaAdress = criptografador.descriptografar(empresa!!.adress!!)
+                val empresaAdress = empresa!!.adress!!
+                lblTexto.append("${empresa!!.name} - ${empresa!!.comments} - ${empresaAdress} - ${empresa!!.is_approved}\n")
             }
 
             override fun onCancelled(error: DatabaseError) {
@@ -61,15 +57,38 @@ class MainActivity : AppCompatActivity(), RecyclerViewItemListener {
             empresa.adress = criptografador.criptografar(txtAdress.text.toString())
             empresa.is_approved = checkBoxIsApproved.isChecked
 
-            val database = FirebaseDatabase.getInstance()
-            val myref = database.getReference("mensagens")
-            myref.setValue(empresa)
+            if (empresa?.name == null || empresa?.comments == null || empresa.adress == null) {
+                Toast.makeText(this.applicationContext, "Preencha todos os campos", Toast.LENGTH_LONG)
+            } else {
+                val empresaDAO = EmpresaDAO()
+                empresaDAO.inserir(empresa)?.addOnSuccessListener {
+                    Log.i("MainActivity", "Empresa inserida")
+                }?.addOnFailureListener {
+                    Log.i("MainActivity", "Erro ao inserir empresa")
+                }
 
-            txtAdress.setText(null)
-            txtComments.setText(null)
-            txtName.setText(null)
+                val database = FirebaseDatabase.getInstance()
+                val myref = database.getReference("empresa")
+                myref.setValue(empresa)
+
+                txtAdress.setText(null)
+                txtComments.setText(null)
+                txtName.setText(null)
+            }
         }
     }
+
+//    private fun atualizarLista() {
+//        EmpresaDAO().listar()!!.addOnSuccessListener { listaDeDocumentos ->
+//            val nomes = ArrayList<String>()
+//            for(documento in listaDeDocumentos) {
+//
+//                var empresa = documento.toObject(Empresa::class.java)
+//                nomes.add(empresa.name.toString())
+//            }
+//            val lstEmpresas = this.fin
+//        }
+//    }
 
     override fun recicleViewItemClicked(view: View, id: String) {
 
