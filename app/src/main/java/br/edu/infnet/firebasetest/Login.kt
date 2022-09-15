@@ -37,7 +37,9 @@ class Login : AppCompatActivity() {
                         updateStatus()
                         nextActivity(mUser!!)
                     }
-                    Toast.makeText(this.applicationContext, "Falha ao criar usuário: ${it.exception!!.message}", Toast.LENGTH_LONG).show()
+                    if (it.exception != null) {
+                        Toast.makeText(this.applicationContext, "Falha ao criar usuário: ${it.exception!!.message}", Toast.LENGTH_LONG).show()
+                    }
                 }
         }
 
@@ -53,7 +55,11 @@ class Login : AppCompatActivity() {
                         updateStatus()
                         nextActivity(mUser!!)
                     }
-                    Toast.makeText(this.applicationContext, "Falha ao logar: ${it.exception!!.message}", Toast.LENGTH_LONG).show()
+                    if (it.exception != null){
+                        Toast.makeText(this.applicationContext, "Falha ao logar: ${it.exception!!.message}", Toast.LENGTH_LONG).show()
+                    } else {
+                        Toast.makeText(this.applicationContext, "Falha desconhecida ao logar", Toast.LENGTH_LONG).show()
+                    }
                 }
 
         }

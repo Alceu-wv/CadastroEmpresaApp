@@ -7,6 +7,8 @@ import android.util.Log
 import android.view.View
 import android.widget.*
 import androidx.annotation.RequiresApi
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -40,8 +42,10 @@ class MainActivity : AppCompatActivity(), RecyclerViewItemListener {
                 val empresa = snapshot.getValue(Empresa::class.java)
 
 //              FIXME: val empresaAdress = criptografador.descriptografar(empresa!!.adress!!)
-                val empresaAdress = empresa!!.adress!!
-                lblTexto.append("${empresa!!.name} - ${empresa!!.comments} - ${empresaAdress} - ${empresa!!.is_approved}\n")
+                if (empresa != null) {
+                    val empresaAdress = empresa!!.adress!!
+                    lblTexto.append("${empresa!!.name} - ${empresa!!.comments} - ${empresaAdress} - ${empresa!!.is_approved}\n")
+                }
             }
 
             override fun onCancelled(error: DatabaseError) {
@@ -78,19 +82,29 @@ class MainActivity : AppCompatActivity(), RecyclerViewItemListener {
         }
     }
 
-//    private fun atualizarLista() {
-//        EmpresaDAO().listar()!!.addOnSuccessListener { listaDeDocumentos ->
-//            val nomes = ArrayList<String>()
-//            for(documento in listaDeDocumentos) {
-//
-//                var empresa = documento.toObject(Empresa::class.java)
-//                nomes.add(empresa.name.toString())
-//            }
-//            val lstEmpresas = this.fin
-//        }
-//    }
+    private fun atualizarLista() {
+        EmpresaDAO().listar()!!.addOnSuccessListener { listaDeDocumentos ->
+
+            val empresas = ArrayList<Empresa>()
+            for(documento in listaDeDocumentos) {
+
+                var empresa = documento.toObject(Empresa::class.java)
+                empresas.add(empresa)
+            }
+            val lstEmpresas = this.findViewById<RecyclerView>(R.id.lstEmpresas)
+            lstEmpresas.layoutManager = LinearLayoutManager(this)
+            val adapter = ListaEmpresaAdapter()
+            adapter.listaEmpresa = empresas
+            adapter.setRecyclerViewItemListener(this)
+
+        }?.addOnFailureListener { exception ->
+
+            Toast.makeText(this, exception.message, Toast.LENGTH_LONG).show()
+
+        }
+    }
 
     override fun recicleViewItemClicked(view: View, id: String) {
-
+        Log.i("MainActivity", "O usuário $id foi clicado")
     }
 }
