@@ -1,6 +1,5 @@
 package br.edu.infnet.firebasetest
 
-import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -8,7 +7,6 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
-import androidx.core.content.ContentProviderCompat.requireContext
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 
@@ -108,7 +106,6 @@ class Login : AppCompatActivity() {
 
     fun nextActivity(user: FirebaseUser) {
         val intent = Intent(this@Login, MainActivity::class.java)
-        intent.putExtra("user", user)
         startActivity(intent)
     }
 }

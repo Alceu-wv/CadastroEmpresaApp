@@ -9,6 +9,7 @@ import android.widget.*
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -19,33 +20,42 @@ class MainActivity : AppCompatActivity(), RecyclerViewItemListener {
 
     val criptografador = Criptografador()
     private lateinit var mUser: FirebaseUser
+    private lateinit var empresaDAO: EmpresaDAO
 
+    private lateinit var mAuth: FirebaseAuth
 
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        empresaDAO = EmpresaDAO()
+
+        mAuth = FirebaseAuth.getInstance()
+        val mUser = mAuth.currentUser
+
+
         val txtName = this.findViewById<EditText>(R.id.txtName)
         val txtAdress = this.findViewById<EditText>(R.id.txtAdress)
         val txtComments = this.findViewById<EditText>(R.id.txtComments)
         val checkBoxIsApproved = this.findViewById<CheckBox>(R.id.checkBoxIsApproved)
-        val lblTexto = this.findViewById<TextView>(R.id.txtNameRow)
+//        val lstEmpresas = this.findViewById<TextView>(R.id.lstEmpresas)
         val btnSalvar = this.findViewById<Button>(R.id.btnSalvar)
 
         val database = FirebaseDatabase.getInstance()
-        val myref = database.getReference("mensagens")
+        val myref = database.getReference("empresa")
         myref.addValueEventListener(object: ValueEventListener {
 
             override fun onDataChange(snapshot: DataSnapshot) {
 
-                val empresa = snapshot.getValue(Empresa::class.java)
+                val empresas = obter_empresas_de_usuario(mUser!!.uid)
+
 
 //              FIXME: val empresaAdress = criptografador.descriptografar(empresa!!.adress!!)
-                if (empresa != null) {
-                    val empresaAdress = empresa!!.adress!!
-                    lblTexto.append("${empresa!!.name} - ${empresa!!.comments} - ${empresaAdress} - ${empresa!!.is_approved}\n")
-                }
+//                if (empresa != null) {
+//                    val empresaAdress = empresa!!.adress!!
+//                    lblTexto.append("${empresa!!.name} - ${empresa!!.comments} - ${empresaAdress} - ${empresa!!.is_approved}\n")
+//                }
             }
 
             override fun onCancelled(error: DatabaseError) {
@@ -71,9 +81,9 @@ class MainActivity : AppCompatActivity(), RecyclerViewItemListener {
                     Log.i("MainActivity", "Erro ao inserir empresa")
                 }
 
-                val database = FirebaseDatabase.getInstance()
-                val myref = database.getReference("empresa")
-                myref.setValue(empresa)
+//                val database = FirebaseDatabase.getInstance()
+//                val myref = database.getReference("empresa")
+//                myref.setValue(empresa)
 
                 txtAdress.setText(null)
                 txtComments.setText(null)
@@ -106,5 +116,25 @@ class MainActivity : AppCompatActivity(), RecyclerViewItemListener {
 
     override fun recicleViewItemClicked(view: View, id: String) {
         Log.i("MainActivity", "O usuário $id foi clicado")
+        empresaDAO.obter(id).addOnSuccessListener {
+            val empresa = it.toObject(Empresa::class.java)
+        }
+    }
+
+    fun obter_empresas_de_usuario(user: String): ArrayList<Empresa> {
+        var empresas = arrayListOf<Empresa>()
+
+        empresaDAO.obter_empresas_de_usuario(user).addOnSuccessListener {
+            Log.i("MainActivity", "Obtendo empresas de usuário $user")
+
+            for (documento in it) {
+                var empresa = documento.toObject(Empresa::class.java)
+                empresas.add(empresa)
+            }
+        }
+
+        return empresas
     }
 }
+
+// 45m da aula 10 de fundamentos kotlin ------15/09 08:26
