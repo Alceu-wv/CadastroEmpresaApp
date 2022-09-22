@@ -7,6 +7,9 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.AdView
+import com.google.android.gms.ads.MobileAds
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 
@@ -15,11 +18,17 @@ class Login : AppCompatActivity() {
     private lateinit var mAuth: FirebaseAuth
     private lateinit var lblStatus: TextView
     private var mUser: FirebaseUser? = null
+    private lateinit var mAdView: AdView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         setContentView(R.layout.activity_login)
+
+        MobileAds.initialize(this) {}
+        mAdView = this.findViewById<AdView>(R.id.adView)
+        val adRequest = AdRequest.Builder().build()
+        mAdView.loadAd(adRequest)
+
         mAuth = FirebaseAuth.getInstance()
         lblStatus = findViewById<TextView>(R.id.lblStatus)
 
