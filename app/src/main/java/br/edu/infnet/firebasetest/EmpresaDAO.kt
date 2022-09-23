@@ -37,6 +37,10 @@ class EmpresaDAO {
         return db.collection(COLLECTION).document(id).get()
     }
 
+    fun deletar(id: String): Task<Void> {
+        return db.collection(COLLECTION).document(id).delete()
+    }
+
     fun obter_empresas_de_usuario(user: String): Task<QuerySnapshot> {
         return db.collection(COLLECTION).whereEqualTo("userId", user).get()
     }

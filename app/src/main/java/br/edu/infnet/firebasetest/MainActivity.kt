@@ -9,15 +9,8 @@ import android.widget.*
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.gms.ads.AdRequest
-import com.google.android.gms.ads.AdView
-import com.google.android.gms.ads.MobileAds
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
 
 class MainActivity : AppCompatActivity(), RecyclerViewItemListener {
 
@@ -37,17 +30,18 @@ class MainActivity : AppCompatActivity(), RecyclerViewItemListener {
         val adapter = ListaEmpresaAdapter(this)
         lstEmpresas.adapter = adapter
 
+        this.atualizarLista()
+
         empresaDAO = EmpresaDAO()
 
         mAuth = FirebaseAuth.getInstance()
-        val mUser = mAuth.currentUser
+        mUser = mAuth.currentUser!!
 
 
         val txtName = this.findViewById<EditText>(R.id.txtName)
         val txtAdress = this.findViewById<EditText>(R.id.txtAdress)
         val txtComments = this.findViewById<EditText>(R.id.txtComments)
         val checkBoxIsApproved = this.findViewById<CheckBox>(R.id.checkBoxIsApproved)
-//        val lstEmpresas = this.findViewById<TextView>(R.id.lstEmpresas)
         val btnSalvar = this.findViewById<Button>(R.id.btnSalvar)
 
         empresaDAO.setUpEmpresaSnapshotListener { querySnapshot, firebaseFirestoreException ->
@@ -100,13 +94,11 @@ class MainActivity : AppCompatActivity(), RecyclerViewItemListener {
                     Log.i("MainActivity", "Erro ao inserir empresa")
                 }
 
-//                val database = FirebaseDatabase.getInstance()
-//                val myref = database.getReference("empresa")
-//                myref.setValue(empresa)
-
                 txtAdress.setText(null)
                 txtComments.setText(null)
                 txtName.setText(null)
+
+                this.atualizarLista()
             }
         }
     }
@@ -125,6 +117,7 @@ class MainActivity : AppCompatActivity(), RecyclerViewItemListener {
             val adapter = ListaEmpresaAdapter(this)
             adapter.listaEmpresa = empresas
             adapter.setRecyclerViewItemListener(this)
+            lstEmpresas.adapter = adapter
 
         }?.addOnFailureListener { exception ->
 
@@ -140,12 +133,16 @@ class MainActivity : AppCompatActivity(), RecyclerViewItemListener {
         }
     }
 
-    override fun editCLicked(view: View, position: Int) {
+    override fun editCLicked(view: View, position: Int, empresa: Empresa) {
         TODO("Not yet implemented")
     }
 
-    override fun deleteClicked(view: View, position: Int) {
-        TODO("Not yet implemented")
+    override fun deleteClicked(view: View, position: Int, empresa: Empresa) {
+        empresaDAO.deletar(empresa.id!!).addOnSuccessListener {
+            Log.i("MainActivity", "Empresa ${empresa.name} deletada")
+        }
+        this.atualizarLista()
+
     }
 
     fun obter_empresas_de_usuario(user: String): ArrayList<Empresa> {
@@ -163,5 +160,3 @@ class MainActivity : AppCompatActivity(), RecyclerViewItemListener {
         return empresas
     }
 }
-
-// 45m da aula 10 de fundamentos kotlin ------15/09 08:26

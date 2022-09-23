@@ -51,12 +51,12 @@ class ListaEmpresaAdapter(itemListener: RecyclerViewItemListener) : RecyclerView
 
             val btnEdit = itemView.findViewById<Button>(R.id.btnEdit)
             btnEdit.setOnClickListener {
-                itemListener.editCLicked(it, position)
+                itemListener.editCLicked(it, position, empresa)
             }
 
             val btnDelete = itemView.findViewById<Button>(R.id.btnDelete)
-            btnEdit.setOnClickListener {
-                itemListener.deleteClicked(it, position)
+            btnDelete.setOnClickListener {
+                itemListener.deleteClicked(it, position, empresa)
             }
         }
     }
