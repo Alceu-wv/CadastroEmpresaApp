@@ -2,6 +2,7 @@ package br.edu.infnet.firebasetest
 
 data class Empresa(
     var id: String? = null,
+    var userId: String? = null,
     var name: String? = null,
     var adress: String? = null,
     var is_approved: Boolean? = null,

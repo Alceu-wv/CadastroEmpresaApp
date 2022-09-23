@@ -32,6 +32,11 @@ class MainActivity : AppCompatActivity(), RecyclerViewItemListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        val lstEmpresas = this.findViewById<RecyclerView>(R.id.lstEmpresas)
+        lstEmpresas.layoutManager = LinearLayoutManager(this)
+        val adapter = ListaEmpresaAdapter(this)
+        lstEmpresas.adapter = adapter
+
         empresaDAO = EmpresaDAO()
 
         mAuth = FirebaseAuth.getInstance()
@@ -45,13 +50,23 @@ class MainActivity : AppCompatActivity(), RecyclerViewItemListener {
 //        val lstEmpresas = this.findViewById<TextView>(R.id.lstEmpresas)
         val btnSalvar = this.findViewById<Button>(R.id.btnSalvar)
 
-        val database = FirebaseDatabase.getInstance()
-        val myref = database.getReference("empresa")
-        myref.addValueEventListener(object: ValueEventListener {
+        empresaDAO.setUpEmpresaSnapshotListener { querySnapshot, firebaseFirestoreException ->
+            Log.i("MainActivity", "------empresaDAO.setUpEmpresaSanpshotListener-------")
+            if (querySnapshot != null) {
+                for (documento in querySnapshot) {
+                    var empresa = documento.toObject(Empresa::class.java)
+                    Log.i("MainActivity", "${empresa.id} - ${empresa.name}")
+                }
+            }
+        }
 
-            override fun onDataChange(snapshot: DataSnapshot) {
-
-                val empresas = obter_empresas_de_usuario(mUser!!.uid)
+//        val database = FirebaseDatabase.getInstance()
+//        val myref = database.getReference("empresa")
+//        myref.addValueEventListener(object: ValueEventListener {
+//
+//            override fun onDataChange(snapshot: DataSnapshot) {
+//
+//                val empresas = obter_empresas_de_usuario(mUser!!.uid)
 
 
 //              FIXME: val empresaAdress = criptografador.descriptografar(empresa!!.adress!!)
@@ -59,16 +74,18 @@ class MainActivity : AppCompatActivity(), RecyclerViewItemListener {
 //                    val empresaAdress = empresa!!.adress!!
 //                    lblTexto.append("${empresa!!.name} - ${empresa!!.comments} - ${empresaAdress} - ${empresa!!.is_approved}\n")
 //                }
-            }
+//            }
 
-            override fun onCancelled(error: DatabaseError) {
+//            override fun onCancelled(error: DatabaseError) {
+//
+//                Toast.makeText(applicationContext, "Erro", Toast.LENGTH_LONG)
+//            }
+//        })
 
-                Toast.makeText(applicationContext, "Erro", Toast.LENGTH_LONG)
-            }
-        })
         btnSalvar.setOnClickListener {
             val empresa = Empresa()
 
+            empresa.userId = mUser!!.uid
             empresa.name = txtName.text.toString()
             empresa.comments = txtComments.text.toString()
             empresa.adress = criptografador.criptografar(txtAdress.text.toString())
@@ -77,7 +94,6 @@ class MainActivity : AppCompatActivity(), RecyclerViewItemListener {
             if (empresa?.name == null || empresa?.comments == null || empresa.adress == null) {
                 Toast.makeText(this.applicationContext, "Preencha todos os campos", Toast.LENGTH_LONG)
             } else {
-                val empresaDAO = EmpresaDAO()
                 empresaDAO.inserir(empresa)?.addOnSuccessListener {
                     Log.i("MainActivity", "Empresa inserida")
                 }?.addOnFailureListener {
@@ -106,7 +122,7 @@ class MainActivity : AppCompatActivity(), RecyclerViewItemListener {
             }
             val lstEmpresas = this.findViewById<RecyclerView>(R.id.lstEmpresas)
             lstEmpresas.layoutManager = LinearLayoutManager(this)
-            val adapter = ListaEmpresaAdapter()
+            val adapter = ListaEmpresaAdapter(this)
             adapter.listaEmpresa = empresas
             adapter.setRecyclerViewItemListener(this)
 
@@ -122,6 +138,14 @@ class MainActivity : AppCompatActivity(), RecyclerViewItemListener {
         empresaDAO.obter(id).addOnSuccessListener {
             val empresa = it.toObject(Empresa::class.java)
         }
+    }
+
+    override fun editCLicked(view: View, position: Int) {
+        TODO("Not yet implemented")
+    }
+
+    override fun deleteClicked(view: View, position: Int) {
+        TODO("Not yet implemented")
     }
 
     fun obter_empresas_de_usuario(user: String): ArrayList<Empresa> {

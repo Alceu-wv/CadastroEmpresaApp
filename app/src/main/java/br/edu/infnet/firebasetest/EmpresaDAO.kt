@@ -38,6 +38,6 @@ class EmpresaDAO {
     }
 
     fun obter_empresas_de_usuario(user: String): Task<QuerySnapshot> {
-        return db.collection(COLLECTION).whereEqualTo("user", user).get()
+        return db.collection(COLLECTION).whereEqualTo("userId", user).get()
     }
 }
