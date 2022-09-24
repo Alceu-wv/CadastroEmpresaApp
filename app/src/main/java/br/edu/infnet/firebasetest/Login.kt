@@ -23,6 +23,8 @@ class Login : AppCompatActivity() {
     private lateinit var btnEmpresasAprovadas: Button
     private lateinit var btnCriarConta: Button
     private lateinit var btnSignInAcessar: Button
+    private lateinit var txtEmail: EditText
+    private lateinit var txtSenha: EditText
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,7 +33,9 @@ class Login : AppCompatActivity() {
         mAdView = this.findViewById(R.id.adView)
         btnEmpresasAprovadas = this.findViewById(R.id.btnEmpresasAprovadas)
         btnCriarConta = this.findViewById(R.id.btnCriarConta)
-        btnSignInAcessar = this.findViewById<Button>(R.id.btnLogar)
+        btnSignInAcessar = this.findViewById(R.id.btnLogar)
+        txtEmail = this.findViewById(R.id.editTextEmail)
+        txtSenha = this.findViewById(R.id.editTextSenha)
 
         MobileAds.initialize(this) {}
         val adRequest = AdRequest.Builder().build()
@@ -40,10 +44,7 @@ class Login : AppCompatActivity() {
         mAuth = FirebaseAuth.getInstance()
         lblStatus = findViewById(R.id.lblStatus)
 
-
         btnCriarConta.setOnClickListener {
-            val txtEmail = this.findViewById<EditText>(R.id.editTextEmail)
-            val txtSenha = this.findViewById<EditText>(R.id.editTextSenha)
             mAuth
                 .createUserWithEmailAndPassword(txtEmail.text.toString(), txtSenha.text.toString())
                 .addOnCompleteListener {
@@ -58,8 +59,6 @@ class Login : AppCompatActivity() {
         }
 
         btnSignInAcessar.setOnClickListener {
-            val txtEmail = this.findViewById<EditText>(R.id.editTextEmail)
-            val txtSenha = this.findViewById<EditText>(R.id.editTextSenha)
             mAuth
                 .signInWithEmailAndPassword(txtEmail.text.toString(), txtSenha.text.toString())
                 .addOnCompleteListener {
