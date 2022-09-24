@@ -1,5 +1,6 @@
 package br.edu.infnet.firebasetest
 
+import android.content.Intent
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -17,8 +18,15 @@ class MainActivity : AppCompatActivity(), RecyclerViewItemListener {
     val criptografador = Criptografador()
     private lateinit var mUser: FirebaseUser
     private lateinit var empresaDAO: EmpresaDAO
-
     private lateinit var mAuth: FirebaseAuth
+
+    private lateinit var txtName: EditText
+    private lateinit var txtAdress: EditText
+    private lateinit var txtComments: EditText
+    private lateinit var checkBoxIsApproved: CheckBox
+    private lateinit var btnSalvar: Button
+    private lateinit var btnExit: Button
+
 
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -30,19 +38,19 @@ class MainActivity : AppCompatActivity(), RecyclerViewItemListener {
         val adapter = ListaEmpresaAdapter(this)
         lstEmpresas.adapter = adapter
 
+        mAuth = FirebaseAuth.getInstance()
+        mUser = mAuth.currentUser!!
+
         this.atualizarLista()
 
         empresaDAO = EmpresaDAO()
 
-        mAuth = FirebaseAuth.getInstance()
-        mUser = mAuth.currentUser!!
-
-
-        val txtName = this.findViewById<EditText>(R.id.txtName)
-        val txtAdress = this.findViewById<EditText>(R.id.txtAdress)
-        val txtComments = this.findViewById<EditText>(R.id.txtComments)
-        val checkBoxIsApproved = this.findViewById<CheckBox>(R.id.checkBoxIsApproved)
-        val btnSalvar = this.findViewById<Button>(R.id.btnSalvar)
+        txtName = this.findViewById(R.id.txtName)
+        txtAdress = this.findViewById(R.id.txtAdress)
+        txtComments = this.findViewById(R.id.txtComments)
+        checkBoxIsApproved = this.findViewById(R.id.checkBoxIsApproved)
+        btnSalvar = this.findViewById(R.id.btnSalvar)
+        btnExit = this.findViewById(R.id.btnExit)
 
         empresaDAO.setUpEmpresaSnapshotListener { querySnapshot, firebaseFirestoreException ->
             Log.i("MainActivity", "------empresaDAO.setUpEmpresaSanpshotListener-------")
@@ -76,6 +84,10 @@ class MainActivity : AppCompatActivity(), RecyclerViewItemListener {
 //            }
 //        })
 
+        btnExit.setOnClickListener {
+            this.exit()
+        }
+
         btnSalvar.setOnClickListener {
             val empresa = Empresa()
 
@@ -104,7 +116,7 @@ class MainActivity : AppCompatActivity(), RecyclerViewItemListener {
     }
 
     private fun atualizarLista() {
-        EmpresaDAO().listar()!!.addOnSuccessListener { listaDeDocumentos ->
+        EmpresaDAO().obter_empresas_por_usuario(this.mUser.uid)!!.addOnSuccessListener { listaDeDocumentos ->
 
             val empresas = ArrayList<Empresa>()
             for(documento in listaDeDocumentos) {
@@ -134,7 +146,9 @@ class MainActivity : AppCompatActivity(), RecyclerViewItemListener {
     }
 
     override fun editCLicked(view: View, position: Int, empresa: Empresa) {
-        TODO("Not yet implemented")
+        txtName.setText(empresa.name)
+        txtAdress.setText(empresa.adress)
+        txtComments.setText(empresa.comments)
     }
 
     override fun deleteClicked(view: View, position: Int, empresa: Empresa) {
@@ -142,21 +156,11 @@ class MainActivity : AppCompatActivity(), RecyclerViewItemListener {
             Log.i("MainActivity", "Empresa ${empresa.name} deletada")
         }
         this.atualizarLista()
-
     }
 
-    fun obter_empresas_de_usuario(user: String): ArrayList<Empresa> {
-        var empresas = arrayListOf<Empresa>()
-
-        empresaDAO.obter_empresas_de_usuario(user).addOnSuccessListener {
-            Log.i("MainActivity", "Obtendo empresas de usuário $user")
-
-            for (documento in it) {
-                var empresa = documento.toObject(Empresa::class.java)
-                empresas.add(empresa)
-            }
-        }
-
-        return empresas
+    fun exit() {
+        mAuth.signOut()
+        val intent = Intent(this@MainActivity, Login::class.java)
+        startActivity(intent)
     }
 }
