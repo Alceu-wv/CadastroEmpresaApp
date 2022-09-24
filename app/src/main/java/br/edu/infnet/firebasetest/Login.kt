@@ -86,13 +86,9 @@ class Login : AppCompatActivity() {
 
 
         btnEmpresasAprovadas.setOnClickListener {
-            if (mUser == null) {
-                updateStatus()
-                Toast.makeText(this.applicationContext, "Nenhum usuário logado", Toast.LENGTH_LONG).show()
-            } else {
-                mAuth.signOut()
-                updateStatus()
-            }
+            updateStatus()
+            val intent = Intent(this@Login, EmpresasAprovadas::class.java)
+            startActivity(intent)
         }
     }
 
