@@ -12,8 +12,6 @@
         android:layout_height="wrap_content"
         android:text="Salvar"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/checkBoxIsApproved" />
 
     <Button
@@ -21,7 +19,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Sair"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/checkBoxIsApproved" />
 
     <CheckBox
@@ -138,6 +136,15 @@
                 android:layout_height="match_parent" />
         </LinearLayout>
     </ScrollView>
+
+    <Button
+        android:id="@+id/btnFotografar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Fotografar"
+        app:layout_constraintEnd_toStartOf="@+id/btnSalvar"
+        app:layout_constraintStart_toEndOf="@+id/btnExit"
+        app:layout_constraintTop_toBottomOf="@+id/checkBoxIsApproved" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

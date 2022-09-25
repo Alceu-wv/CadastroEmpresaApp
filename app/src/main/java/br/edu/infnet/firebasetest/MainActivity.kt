@@ -1,9 +1,12 @@
 package br.edu.infnet.firebasetest
 
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.graphics.Bitmap
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.provider.MediaStore
 import android.util.Base64
 import android.util.Log
 import android.view.View
@@ -16,6 +19,8 @@ import com.google.firebase.auth.FirebaseUser
 
 class MainActivity : AppCompatActivity(), RecyclerViewItemListener {
 
+    val REQUEST_IMAGE_CAPTURE = 1
+
     val criptografador = Criptografador()
     private lateinit var mUser: FirebaseUser
     private lateinit var empresaDAO: EmpresaDAO
@@ -27,6 +32,7 @@ class MainActivity : AppCompatActivity(), RecyclerViewItemListener {
     private lateinit var checkBoxIsApproved: CheckBox
     private lateinit var btnSalvar: Button
     private lateinit var btnExit: Button
+    private lateinit var btnFotografar: Button
 
 
     @RequiresApi(Build.VERSION_CODES.M)
@@ -52,6 +58,7 @@ class MainActivity : AppCompatActivity(), RecyclerViewItemListener {
         checkBoxIsApproved = this.findViewById(R.id.checkBoxIsApproved)
         btnSalvar = this.findViewById(R.id.btnSalvar)
         btnExit = this.findViewById(R.id.btnExit)
+        btnFotografar = this.findViewById(R.id.btnFotografar)
 
         empresaDAO.setUpEmpresaSnapshotListener { querySnapshot, firebaseFirestoreException ->
             Log.i("MainActivity", "------empresaDAO.setUpEmpresaSanpshotListener-------")
@@ -63,8 +70,10 @@ class MainActivity : AppCompatActivity(), RecyclerViewItemListener {
             }
         }
 
-        btnExit.setOnClickListener {
-            this.exit()
+        btnExit.setOnClickListener { this.exit() }
+
+        btnFotografar.setOnClickListener {
+            this.takePicture()
         }
 
         btnSalvar.setOnClickListener {
@@ -145,5 +154,24 @@ class MainActivity : AppCompatActivity(), RecyclerViewItemListener {
         mAuth.signOut()
         val intent = Intent(this@MainActivity, Login::class.java)
         startActivity(intent)
+    }
+
+    @RequiresApi(Build.VERSION_CODES.M)
+    private fun takePicture() {
+        val cameraIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+
+        if (checkSelfPermission(android.Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(arrayOf(android.Manifest.permission.CAMERA), REQUEST_IMAGE_CAPTURE)
+        }
+        if (checkSelfPermission(android.Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
+            startActivityForResult(cameraIntent, REQUEST_IMAGE_CAPTURE)
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+            val imageBitmap = data?.extras!!.get("data") as Bitmap
+        }
     }
 }
