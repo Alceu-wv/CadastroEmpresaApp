@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Base64
 import android.util.Log
 import android.view.View
 import android.widget.*
@@ -62,28 +63,6 @@ class MainActivity : AppCompatActivity(), RecyclerViewItemListener {
             }
         }
 
-//        val database = FirebaseDatabase.getInstance()
-//        val myref = database.getReference("empresa")
-//        myref.addValueEventListener(object: ValueEventListener {
-//
-//            override fun onDataChange(snapshot: DataSnapshot) {
-//
-//                val empresas = obter_empresas_de_usuario(mUser!!.uid)
-
-
-//              FIXME: val empresaAdress = criptografador.descriptografar(empresa!!.adress!!)
-//                if (empresa != null) {
-//                    val empresaAdress = empresa!!.adress!!
-//                    lblTexto.append("${empresa!!.name} - ${empresa!!.comments} - ${empresaAdress} - ${empresa!!.is_approved}\n")
-//                }
-//            }
-
-//            override fun onCancelled(error: DatabaseError) {
-//
-//                Toast.makeText(applicationContext, "Erro", Toast.LENGTH_LONG)
-//            }
-//        })
-
         btnExit.setOnClickListener {
             this.exit()
         }
@@ -94,7 +73,7 @@ class MainActivity : AppCompatActivity(), RecyclerViewItemListener {
             empresa.userId = mUser!!.uid
             empresa.name = txtName.text.toString()
             empresa.comments = txtComments.text.toString()
-            empresa.adress = criptografador.criptografar(txtAdress.text.toString())
+            empresa.adress = criptografador.criptografar(empresa.adress.toString())
             empresa.is_approved = checkBoxIsApproved.isChecked
 
             if (empresa?.name == null || empresa?.comments == null || empresa.adress == null) {
@@ -106,15 +85,16 @@ class MainActivity : AppCompatActivity(), RecyclerViewItemListener {
                     Log.i("MainActivity", "Erro ao inserir empresa")
                 }
 
-                txtAdress.setText(null)
-                txtComments.setText(null)
-                txtName.setText(null)
+                txtAdress.text.clear()
+                txtComments.text.clear()
+                txtName.text.clear()
 
                 this.atualizarLista()
             }
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.M)
     private fun atualizarLista() {
         EmpresaDAO().obter_empresas_por_usuario(this.mUser.uid)!!.addOnSuccessListener { listaDeDocumentos ->
 
@@ -122,8 +102,10 @@ class MainActivity : AppCompatActivity(), RecyclerViewItemListener {
             for(documento in listaDeDocumentos) {
 
                 var empresa = documento.toObject(Empresa::class.java)
+                empresa.adress = criptografador.descriptografar(empresa.adress!!.toString())
                 empresas.add(empresa)
             }
+
             val lstEmpresas = this.findViewById<RecyclerView>(R.id.lstEmpresas)
             lstEmpresas.layoutManager = LinearLayoutManager(this)
             val adapter = ListaEmpresaAdapter(this)
@@ -151,6 +133,7 @@ class MainActivity : AppCompatActivity(), RecyclerViewItemListener {
         txtComments.setText(empresa.comments)
     }
 
+    @RequiresApi(Build.VERSION_CODES.M)
     override fun deleteClicked(view: View, position: Int, empresa: Empresa) {
         empresaDAO.deletar(empresa.id!!).addOnSuccessListener {
             Log.i("MainActivity", "Empresa ${empresa.name} deletada")
