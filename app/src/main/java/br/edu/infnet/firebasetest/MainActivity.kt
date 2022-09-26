@@ -14,12 +14,20 @@ import android.widget.*
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.security.crypto.EncryptedFile
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import java.io.File
+import androidx.security.crypto.MasterKey
+import java.text.SimpleDateFormat
+import java.util.*
+import kotlin.collections.ArrayList
+
 
 class MainActivity : AppCompatActivity(), RecyclerViewItemListener {
 
     val REQUEST_IMAGE_CAPTURE = 1
+    val WRITE_REQUEST = 2
 
     val criptografador = Criptografador()
     private lateinit var mUser: FirebaseUser
@@ -129,13 +137,6 @@ class MainActivity : AppCompatActivity(), RecyclerViewItemListener {
         }
     }
 
-    override fun recicleViewItemClicked(view: View, id: String) {
-        Log.i("MainActivity", "O usuário $id foi clicado")
-        empresaDAO.obter(id).addOnSuccessListener {
-            val empresa = it.toObject(Empresa::class.java)
-        }
-    }
-
     override fun editCLicked(view: View, position: Int, empresa: Empresa) {
         txtName.setText(empresa.name)
         txtAdress.setText(empresa.adress)
@@ -168,10 +169,37 @@ class MainActivity : AppCompatActivity(), RecyclerViewItemListener {
         }
     }
 
+    private fun savePicture(bitmap: Bitmap?) {
+        val data = Calendar.getInstance().time
+        val dataFormat = SimpleDateFormat("dd_MM_yyyy_HH-mm-ss", Locale.getDefault())
+
+        val masterKey = MasterKey.Builder(applicationContext, MasterKey.DEFAULT_MASTER_KEY_ALIAS)
+            .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
+            .build()
+
+        val file = File(applicationContext.filesDir, "${mUser.uid}-${dataFormat.format(data)}.fig")
+
+        if (file.exists()) {
+            file.delete()
+        }
+        val encryptedFile = EncryptedFile.Builder(
+            applicationContext,
+            file,
+            masterKey,
+            EncryptedFile.FileEncryptionScheme.AES256_GCM_HKDF_4KB
+        ).build()
+        val fos = encryptedFile.openFileOutput()
+        fos.write(bitmap.toString().toByteArray())
+        fos.close()
+    }
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-            val imageBitmap = data?.extras!!.get("data") as Bitmap
+            val pictureBitmap = data?.extras!!.get("data") as Bitmap
+            val imgPictureView = this.findViewById<ImageView>(R.id.imageView)
+            imgPictureView.setImageBitmap(pictureBitmap)
+            savePicture(pictureBitmap)
         }
     }
 }
