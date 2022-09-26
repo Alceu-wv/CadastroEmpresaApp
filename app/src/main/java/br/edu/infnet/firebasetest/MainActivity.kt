@@ -137,6 +137,10 @@ class MainActivity : AppCompatActivity(), RecyclerViewItemListener {
         }
     }
 
+    override fun recicleViewItemClicked(view: View, id: String) {
+        Log.i("MainActivity", "O usuário $id foi clicado")
+    }
+
     override fun editCLicked(view: View, position: Int, empresa: Empresa) {
         txtName.setText(empresa.name)
         txtAdress.setText(empresa.adress)
