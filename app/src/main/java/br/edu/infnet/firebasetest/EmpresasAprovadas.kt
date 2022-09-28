@@ -40,7 +40,7 @@ class EmpresasAprovadas : AppCompatActivity() {
             for(documento in listaDeDocumentos) {
 
                 var empresa = documento.toObject(Empresa::class.java)
-                if (empresa.name.toString() != null && empresa.name.toString() != "")
+                if (empresa.name.toString() != null && empresa.name.toString() != "" && empresa.is_approved == true)
                     empresas.add(empresa.name!!.toString())
             }
 

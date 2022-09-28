@@ -7,7 +7,6 @@ import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
-import android.util.Base64
 import android.util.Log
 import android.view.View
 import android.widget.*
@@ -27,7 +26,6 @@ import kotlin.collections.ArrayList
 class MainActivity : AppCompatActivity(), RecyclerViewItemListener {
 
     val REQUEST_IMAGE_CAPTURE = 1
-    val WRITE_REQUEST = 2
 
     val criptografador = Criptografador()
     private lateinit var mUser: FirebaseUser
@@ -70,6 +68,7 @@ class MainActivity : AppCompatActivity(), RecyclerViewItemListener {
 
         empresaDAO.setUpEmpresaSnapshotListener { querySnapshot, firebaseFirestoreException ->
             Log.i("MainActivity", "------empresaDAO.setUpEmpresaSanpshotListener-------")
+            this.atualizarLista()
             if (querySnapshot != null) {
                 for (documento in querySnapshot) {
                     var empresa = documento.toObject(Empresa::class.java)
