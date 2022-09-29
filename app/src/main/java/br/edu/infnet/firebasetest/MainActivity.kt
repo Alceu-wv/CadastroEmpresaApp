@@ -32,6 +32,9 @@ class MainActivity : AppCompatActivity(), RecyclerViewItemListener {
     private lateinit var empresaDAO: EmpresaDAO
     private lateinit var mAuth: FirebaseAuth
 
+    private lateinit var lstEmpresas: RecyclerView
+    private lateinit var adapter: ListaEmpresaAdapter
+
     private lateinit var txtName: EditText
     private lateinit var txtAdress: EditText
     private lateinit var txtComments: EditText
@@ -39,6 +42,8 @@ class MainActivity : AppCompatActivity(), RecyclerViewItemListener {
     private lateinit var btnSalvar: Button
     private lateinit var btnExit: Button
     private lateinit var btnFotografar: Button
+    private lateinit var progressBar: ProgressBar
+
 
 
     @RequiresApi(Build.VERSION_CODES.M)
@@ -46,15 +51,14 @@ class MainActivity : AppCompatActivity(), RecyclerViewItemListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val lstEmpresas = this.findViewById<RecyclerView>(R.id.lstEmpresas)
+        lstEmpresas = this.findViewById(R.id.lstEmpresas)
         lstEmpresas.layoutManager = LinearLayoutManager(this)
-        val adapter = ListaEmpresaAdapter(this)
+        adapter = ListaEmpresaAdapter(this)
         lstEmpresas.adapter = adapter
+        lstEmpresas.visibility = View.GONE
 
         mAuth = FirebaseAuth.getInstance()
         mUser = mAuth.currentUser!!
-
-        this.atualizarLista()
 
         empresaDAO = EmpresaDAO()
 
@@ -65,6 +69,9 @@ class MainActivity : AppCompatActivity(), RecyclerViewItemListener {
         btnSalvar = this.findViewById(R.id.btnSalvar)
         btnExit = this.findViewById(R.id.btnExit)
         btnFotografar = this.findViewById(R.id.btnFotografar)
+        progressBar = this.findViewById(R.id.progressbar)
+
+        this.atualizarLista()
 
         empresaDAO.setUpEmpresaSnapshotListener { querySnapshot, firebaseFirestoreException ->
             Log.i("MainActivity", "------empresaDAO.setUpEmpresaSanpshotListener-------")
@@ -112,6 +119,7 @@ class MainActivity : AppCompatActivity(), RecyclerViewItemListener {
 
     @RequiresApi(Build.VERSION_CODES.M)
     private fun atualizarLista() {
+        progressBar.visibility = View.VISIBLE
         EmpresaDAO().obter_empresas_por_usuario(this.mUser.uid)!!.addOnSuccessListener { listaDeDocumentos ->
 
             val empresas = ArrayList<Empresa>()
@@ -122,12 +130,13 @@ class MainActivity : AppCompatActivity(), RecyclerViewItemListener {
                 empresas.add(empresa)
             }
 
-            val lstEmpresas = this.findViewById<RecyclerView>(R.id.lstEmpresas)
             lstEmpresas.layoutManager = LinearLayoutManager(this)
-            val adapter = ListaEmpresaAdapter(this)
             adapter.listaEmpresa = empresas
             adapter.setRecyclerViewItemListener(this)
             lstEmpresas.adapter = adapter
+            progressBar.visibility = View.GONE
+            lstEmpresas.visibility = View.VISIBLE
+
 
         }?.addOnFailureListener { exception ->
 

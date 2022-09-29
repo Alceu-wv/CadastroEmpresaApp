@@ -7,6 +7,7 @@ import android.widget.Button
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
+
 class ListaEmpresaAdapter(itemListener: RecyclerViewItemListener) : RecyclerView.Adapter<ListaEmpresaAdapter.ViewHolder>() {
 
     var listaEmpresa = ArrayList<Empresa>()
@@ -32,7 +33,6 @@ class ListaEmpresaAdapter(itemListener: RecyclerViewItemListener) : RecyclerView
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.bindItem(listaEmpresa.get(position), itemListener, position)
     }
-
 
     // classe intera
     class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
