@@ -45,7 +45,6 @@ class MainActivity : AppCompatActivity(), RecyclerViewItemListener {
     private lateinit var progressBar: ProgressBar
 
 
-
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -76,12 +75,6 @@ class MainActivity : AppCompatActivity(), RecyclerViewItemListener {
         empresaDAO.setUpEmpresaSnapshotListener { querySnapshot, firebaseFirestoreException ->
             Log.i("MainActivity", "------empresaDAO.setUpEmpresaSanpshotListener-------")
             this.atualizarLista()
-            if (querySnapshot != null) {
-                for (documento in querySnapshot) {
-                    var empresa = documento.toObject(Empresa::class.java)
-                    Log.i("MainActivity", "${empresa.id} - ${empresa.name}")
-                }
-            }
         }
 
         btnExit.setOnClickListener { this.exit() }
@@ -137,11 +130,12 @@ class MainActivity : AppCompatActivity(), RecyclerViewItemListener {
             progressBar.visibility = View.GONE
             lstEmpresas.visibility = View.VISIBLE
 
-
         }?.addOnFailureListener { exception ->
-
             Toast.makeText(this, exception.message, Toast.LENGTH_LONG).show()
+        }
 
+        if (adapter.getItemCount() == 0) {
+            Toast.makeText(this, "Ainda não existem empresas cadastradas", Toast.LENGTH_LONG).show()
         }
     }
 
